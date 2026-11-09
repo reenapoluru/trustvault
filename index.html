@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustVault | Secure Document Workspace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="authScreen" class="auth-wrap">
+    <section class="auth-card">
+      <div class="brand"><span class="brand-mark">T</span><span>TrustVault</span></div>
+      <p class="eyebrow">PRIVATE DOCUMENT WORKSPACE</p>
+      <h1 id="authHeading">Welcome back</h1>
+      <p class="muted" id="authSubheading">Sign in to access your documents.</p>
+      <div class="auth-tabs">
+        <button class="tab active" id="loginTab" type="button">Login</button>
+        <button class="tab" id="signupTab" type="button">Create account</button>
+      </div>
+      <form id="authForm">
+        <div id="nameField" class="field hidden">
+          <label for="fullName">Full name</label>
+          <input id="fullName" autocomplete="name" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" minlength="6" required autocomplete="current-password" placeholder="At least 6 characters">
+        </div>
+        <div id="roleField" class="field hidden">
+          <label for="signupRole">Account type</label>
+          <select id="signupRole">
+            <option value="owner">Document owner</option>
+            <option value="viewer">Viewer</option>
+          </select>
+        </div>
+        <button class="primary full" id="authSubmit" type="submit">Login</button>
+      </form>
+      <p class="auth-note">Demo version: accounts and documents are stored in this browser only.</p>
+      <p id="authMessage" class="message" role="status"></p>
+    </section>
+  </div>
+
+  <div id="appScreen" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand side-brand"><span class="brand-mark">T</span><span>TrustVault</span></div>
+      <div class="workspace-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="documents">▤ <span>My documents</span></button>
+      <button class="nav-item" data-view="shared">♧ <span>Shared with me</span></button>
+      <button class="nav-item admin-only hidden" data-view="admin">▦ <span>Admin overview</span></button>
+      <button class="nav-item" data-view="activity">◷ <span>Audit activity</span></button>
+      <div class="sidebar-bottom">
+        <div class="user-mini"><div class="avatar" id="userAvatar">U</div><div><strong id="sidebarName">User</strong><small id="sidebarRole">Owner</small></div></div>
+        <button class="logout" id="logoutBtn">↪ Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow">YOUR SECURE WORKSPACE</p><h2 id="pageTitle">My documents</h2></div>
+        <div class="top-actions"><span class="user-pill" id="topUser"></span><button class="outline" id="topLogout">Sign out</button></div>
+      </header>
+
+      <section id="documentsView" class="view">
+        <div class="welcome-row">
+          <div><h3>Your documents, in one place.</h3><p class="muted">Upload, organise and control who can access each file.</p></div>
+          <label class="primary upload-btn" for="fileInput">＋ Upload document</label>
+          <input id="fileInput" type="file" hidden accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+        </div>
+        <div class="stats">
+          <div class="stat-card"><span>Total documents</span><strong id="totalDocs">0</strong></div>
+          <div class="stat-card"><span>Shared documents</span><strong id="sharedDocs">0</strong></div>
+          <div class="stat-card"><span>Recent activity</span><strong id="recentActivity">0</strong></div>
+        </div>
+        <div class="toolbar">
+          <input id="searchInput" type="search" placeholder="Search by document name or category…">
+          <select id="categoryFilter"><option value="">All categories</option><option>Work</option><option>Finance</option><option>Legal</option><option>Personal</option><option>Other</option></select>
+          <select id="sortFilter"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option></select>
+        </div>
+        <div id="documentGrid" class="document-grid"></div>
+        <div id="emptyState" class="empty-state hidden"><div class="empty-icon">▤</div><h3>No documents found</h3><p class="muted">Upload a document or change your search.</p></div>
+      </section>
+
+      <section id="sharedView" class="view hidden">
+        <div class="section-intro"><h3>Shared with me</h3><p class="muted">Documents other people have explicitly shared with your account.</p></div>
+        <div id="sharedGrid" class="document-grid"></div>
+        <div id="sharedEmpty" class="empty-state hidden"><div class="empty-icon">♧</div><h3>Nothing shared yet</h3><p class="muted">When someone grants you access, the document appears here.</p></div>
+      </section>
+
+      <section id="adminView" class="view hidden">
+        <div class="section-intro"><h3>Workspace overview</h3><p class="muted">A high-level view of registered users and document activity.</p></div>
+        <div class="stats">
+          <div class="stat-card"><span>Registered users</span><strong id="adminUsers">0</strong></div>
+          <div class="stat-card"><span>All documents</span><strong id="adminDocs">0</strong></div>
+          <div class="stat-card"><span>Audit events</span><strong id="adminEvents">0</strong></div>
+        </div>
+        <div class="panel"><h3>Recent workspace activity</h3><div id="adminActivity"></div></div>
+      </section>
+
+      <section id="activityView" class="view hidden">
+        <div class="section-intro"><h3>Audit activity</h3><p class="muted">A record of document actions in this browser demo.</p></div>
+        <div class="panel"><div class="activity-head"><strong>Event history</strong><span class="muted">Newest first</span></div><div id="activityList"></div></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="shareModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="modal-card">
+      <button class="modal-close" id="closeShare" aria-label="Close">×</button>
+      <p class="eyebrow">DOCUMENT PERMISSIONS</p><h2 id="shareTitle">Manage access</h2>
+      <p class="muted" id="shareDocName"></p>
+      <form id="shareForm">
+        <div class="field"><label for="shareEmail">Grant access to registered user</label><input id="shareEmail" type="email" placeholder="person@example.com" required></div>
+        <div class="field"><label for="sharePermission">Permission</label><select id="sharePermission"><option value="read">Can view and download</option><option value="edit">Can view, download and edit text files</option></select></div>
+        <button class="primary full" type="submit">Grant access</button>
+      </form>
+      <h3 class="access-heading">People with access</h3><div id="accessList"></div>
+      <p id="shareMessage" class="message"></p>
+    </div>
+  </div>
+
+  <div id="previewModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card preview-card">
+      <button class="modal-close" id="closePreview" aria-label="Close">×</button>
+      <p class="eyebrow">DOCUMENT PREVIEW</p><h2 id="previewTitle">Document</h2>
+      <div id="previewContent" class="preview-content"></div>
+      <div class="modal-actions"><a id="downloadLink" class="primary link-button" download>Download file</a><button id="closePreviewBottom" class="outline">Close</button></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
